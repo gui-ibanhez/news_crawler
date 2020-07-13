@@ -1,30 +1,16 @@
-const HTMLParser = require('node-html-parser');
-const fetch = require('node-fetch');
+const fs = require('fs');
 
-const Valor = async () => {
-    const url = "https://valor.globo.com/";
-    const resp = await fetch(url);
-    const data = await resp.text()
+const path = './sources/'
+const sources = fs.readdirSync(path)
 
-    const main_content = HTMLParser.parse(data).querySelector('main')
-    const results = main_content.querySelectorAll('a');
+const mods = sources.map(source => require(path + source))
 
-    const parsedData = results.map((result) => {
-        let title = result.structuredText;
-        let attrs = result.rawAttrs;
-        return {
-            'title': title,
-            'url': attrs.slice(0, attrs.indexOf(' '))
-        };
-    });
-    const searchResults = parsedData.filter(data => {
-        return(data.title != '' && data.url.endsWith('ghtml"'))
+for (mod of mods) {
+    mod().then(results => {
+        console.log("\n" + mod.name + "\n")
+        results.forEach(element => {
+            console.log(element.title);
+            console.log(element.url);
+        })
     })
-
-    //return results;
-    return searchResults;
-};
-
-Valor().then((data) => {
-    console.log(data);
-})
+}

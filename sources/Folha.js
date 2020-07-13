@@ -15,7 +15,7 @@ const Folha = async () => {
         let title = result.structuredText
         let row = { 
             'title':title.slice(0, title.indexOf('\n')).trim(),
-            'url':result.rawAttrs
+            'url':result.getAttribute("href")
         }
     searchResults.push(row);
     })

@@ -10,15 +10,13 @@ const Valor = async () => {
     const results = main_content.querySelectorAll('a');
 
     const parsedData = results.map((result) => {
-        let title = result.structuredText;
-        let attrs = result.rawAttrs;
         return {
-            'title': title,
-            'url': attrs.slice(0, attrs.indexOf(' '))
+            'title': result.structuredText,
+            'url': result.getAttribute('href')
         };
     });
     const searchResults = parsedData.filter(data => {
-        return(data.title != '' && data.url.endsWith('ghtml"'))
+        return(data.title != '' && data.url.endsWith('ghtml'))
     })
 
     //return results;

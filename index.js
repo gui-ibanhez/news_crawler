@@ -1,47 +1,16 @@
-const Infomoney = require('./sources/infomoney')
-const Moneytimes = require('./sources/moneytimes')
-const Valor = require('./sources/valor')
-const Folha = require('./sources/folha')
-const Broadcast = require('./sources/broadcast')
-const Exame = require('./sources/exame')
+const fs = require('fs');
 
-Exame().then(results => {
-    console.log("\n Exame \n")
-    results.forEach(element => {
-        console.log(element.title);
-    })
-})
+const path = './sources/'
+const sources = fs.readdirSync(path)
 
-Infomoney().then(results => {
-    console.log("\n Infomoney \n")
-    results.forEach(element => {
-        console.log(element.title);
-    })
-})
+const mods = sources.map(source => require(path + source))
 
-Moneytimes().then(results => {
-    console.log("\n Moneytimes \n")
-    results.forEach(element => {
-        console.log(element.title);
+for (mod of mods) {
+    mod().then(results => {
+        console.log("\n" + mod.name + "\n")
+        results.forEach(element => {
+            console.log(element.title);
+            console.log(element.url);
+        })
     })
-})
-
-Valor().then(results => {
-    console.log("\n Valor \n")
-    results.forEach(element => {
-        console.log(element.title);
-    })
-})
-
-Folha().then(results => {
-    console.log("\n Folha \n")
-    results.forEach(element => {
-        console.log(element.title);
-    })
-})
-Broadcast().then(results => {
-    console.log("\n Broadcast \n")
-    results.forEach(element => {
-        console.log(element.title);
-    })
-})
+}
